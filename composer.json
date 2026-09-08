@@ -1,0 +1,38 @@
+{
+    "name": "semitexa/music",
+    "description": "Semitexa OS default music player: a Music UI-skill with a bundled playlist of original program-generated ambient tracks (no samples, no copyrighted material — see tools/gen_tracks.py)",
+    "type": "semitexa-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Semitexa",
+            "email": "support@semitexa.com"
+        }
+    ],
+    "require": {
+        "php": "^8.4",
+        "semitexa/core": "*",
+        "semitexa/llm": "*",
+        "semitexa/ssr": "*",
+        "semitexa/os": "*",
+        "semitexa/authorization": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Semitexa\\Music\\": "src/"
+        }
+    },
+    "extra": {
+        "semitexa-module": {
+            "name": "music",
+            "description": "Music player (UI-skill) with a bundled royalty-free ambient playlist"
+        }
+    },
+    "keywords": [
+        "semitexa",
+        "os",
+        "music",
+        "player",
+        "ambient"
+    ]
+}
