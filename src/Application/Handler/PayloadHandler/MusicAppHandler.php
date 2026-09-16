@@ -6,6 +6,7 @@ namespace Semitexa\Music\Application\Handler\PayloadHandler;
 
 use Semitexa\Core\Attribute\AsPayloadHandler;
 use Semitexa\Core\Contract\TypedHandlerInterface;
+use Semitexa\Core\Http\CspNonce;
 use Semitexa\Core\Http\Response\ResourceResponse;
 use Semitexa\Music\Application\Payload\Request\MusicAppPayload;
 use Semitexa\Ssr\Application\Service\Asset\AssetManager;
@@ -201,7 +202,7 @@ renderList();
 HTML;
 
         return $resource
-            ->setContent($html)
+            ->setContent(CspNonce::stamp($html))
             ->setHeader('Content-Type', 'text/html; charset=utf-8');
     }
 }
