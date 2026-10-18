@@ -25,6 +25,9 @@ const TRACKS = JSON.parse(document.getElementById('mp-tracks').textContent);
 const audio = new Audio();
 audio.volume = .8;
 let cur = -1, seeking = false;
+// Prefetched durations by track index: renderList() rebuilds every row, and a
+// metadata callback that already fired would not refill the new ones.
+const durs = [];
 const el = id => document.getElementById(id);
 const fmt = s => isFinite(s) ? Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0') : '0:00';
 
@@ -48,7 +51,7 @@ function repProgress(force) {
 function renderList() {
   el('list').innerHTML = TRACKS.map((t, i) =>
     '<button class="mp__item' + (i === cur ? ' active' + (audio.paused ? '' : ' playing') : '') + '" data-i="' + i + '">'
-    + '<span class="eq"><i></i><i></i><i></i></span><span>' + t.title + '</span><span class="dur" data-dur="' + i + '"></span></button>'
+    + '<span class="eq"><i></i><i></i><i></i></span><span>' + t.title + '</span><span class="dur" data-dur="' + i + '">' + (durs[i] === undefined ? '' : fmt(durs[i])) + '</span></button>'
   ).join('');
 }
 function load(i, autoplay) {
@@ -79,5 +82,5 @@ audio.ontimeupdate = () => {
 window.addEventListener('pagehide', () => { if (!audio.paused) report('complete', { detail: 'player closed' }); });
 // prefetch durations for the list
 TRACKS.forEach((t, i) => { const a = new Audio(); a.preload = 'metadata'; a.src = t.url;
-  a.onloadedmetadata = () => { const d = document.querySelector('[data-dur="' + i + '"]'); if (d) d.textContent = fmt(a.duration); }; });
+  a.onloadedmetadata = () => { durs[i] = a.duration; const d = el('list').querySelector('[data-dur="' + i + '"]'); if (d) d.textContent = fmt(a.duration); }; });
 renderList();

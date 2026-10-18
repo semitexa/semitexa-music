@@ -58,6 +58,8 @@ final class MusicAppHandlerTest extends TestCase
         preg_match('#<script type="application/json" id="mp-tracks">(.*?)</script>#s', $this->render(), $m);
 
         self::assertArrayHasKey(1, $m);
+        // An empty block would satisfy the negative assertion below on its own.
+        self::assertNotSame('', trim($m[1]));
         self::assertStringNotContainsString('<', $m[1]);
     }
 
