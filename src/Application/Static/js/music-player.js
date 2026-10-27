@@ -2,6 +2,9 @@
 // string inside MusicAppHandler, so linters and tests can reach it. The track
 // list is server state (fingerprinted URLs) and arrives as a JSON data block.
 const TRACKS = JSON.parse(document.getElementById('mp-tracks').textContent);
+// The double-submit CSRF token (the readable XSRF-TOKEN cookie), echoed as
+// X-CSRF-Token: without it a signed-in POST was answered 403.
+function csrfToken(){var m=document.cookie.match(/(?:^|;\s*)XSRF-TOKEN=([^;]*)/);return m?decodeURIComponent(m[1]):'';}
 
 // ---- follow the OS theme (dark / light / auto, resolved by the shell) ----
 // The shell stamps data-skin-mode on the PARENT document's <html>; we mirror
@@ -34,7 +37,7 @@ const fmt = s => isFinite(s) ? Math.floor(s/60) + ':' + String(Math.floor(s%60))
 // ---- process-registry producer: honest now-playing bar in Chill ----
 function report(action, extra) {
   try {
-    fetch('/os/process/report', { method:'POST', headers:{'Content-Type':'application/json'},
+    fetch('/os/process/report', { method:'POST', headers:{'Content-Type':'application/json','X-CSRF-Token':csrfToken()},
       body: JSON.stringify(Object.assign({ action, id:'music:player', source:'music', origin:'external' }, extra || {})) });
   } catch (e) {}
 }
